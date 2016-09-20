@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third
+    'django_extensions',
+    # local
+    'collector',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +122,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# twython
+APP_KEY = 'riwoLZOxkVe5iQoBupAIQBqtn'
+
+APP_SECRET = 'z0x7SfFgMPO68A8izX88bK6IUdprKb4DucA22xkwkdmDsJk6i7'
