@@ -1,6 +1,8 @@
 from django.core.mail import EmailMessage
 from django.core.management.base import BaseCommand
 
+from twython.exceptions import TwythonRateLimitError
+
 from albums.forms import AlbumForm
 from albums.models import Album
 from collector.models import TwitterConnector
@@ -19,7 +21,7 @@ class Command(BaseCommand):
         if album_form.is_valid():
             album_form.save()
             self.counter += 1
-            if self.counter % 100 and self.counter <= 500:
+            if self.counter % 100 == 0 and self.counter <= 500:
                 email = EmailMessage(
                     subject=u"#carnival has {counter} photos".format(
                         counter=self.counter),
@@ -38,25 +40,21 @@ class Command(BaseCommand):
                 "twitter_creation_date").last().twitter_creation_date
             conditions.append("since:{date}".format(
                 date=last_creation_date.strftime("%Y-%m-%d")))
+        else:
+            conditions.append("since:2015-01-01")
 
         return conditions
 
     def handle(self, *args, **options):
         twitter = TwitterConnector.objects.all().first()
-        for result in twitter.get_results("#carnival", "filter:twimg"):
-            if 'media' in result['entities']:
-                for media in result['entities']['media']:
-                    self._save(
-                        user=result['user']['name'],
-                        image_url=media['media_url'],
-                        twitter_creation_date=result['created_at'],
-                        favorite_count=result['favorite_count'])
-            if 'retweeted_status' in result:
-                if 'media' in result['retweeted_status']:
-                    media_data = result['retweeted_status']['entities']['media']
-                    for media in media_data:
+        try:
+            for result in twitter.get_results(self.get_conditions()):
+                if 'media' in result['entities']:
+                    for media in result['entities']['media']:
                         self._save(
                             user=result['user']['name'],
                             image_url=media['media_url'],
                             twitter_creation_date=result['created_at'],
                             favorite_count=result['favorite_count'])
+        except TwythonRateLimitError:
+            pass

@@ -23,4 +23,4 @@ class TwitterConnector(models.Model):
     def get_results(self, *args):
         self.twitter = Twython(settings.APP_KEY, access_token=self.token)
 
-        return self.twitter.cursor(self.twitter.search, q=" ".join(args))
+        return self.twitter.cursor(self.twitter.search, q=" ".join(*args))

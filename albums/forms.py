@@ -18,9 +18,9 @@ class AlbumForm(forms.ModelForm):
                   'favorite_count')
 
     def __init__(self, *args, **kwargs):
+        super(AlbumForm, self).__init__(*args, **kwargs)
         self.data['twitter_creation_date'] = parse(
             self.data['twitter_creation_date'])
-        super(AlbumForm, self).__init__(*args, **kwargs)
 
     def clean_image_url(self):
         image_url = self.cleaned_data.get('image_url')
@@ -30,11 +30,11 @@ class AlbumForm(forms.ModelForm):
         return image_url
 
     def save(self, commit=True):
-        obj = super(AlbumForm, self).super(commit=False)
-        if self.image_url:
-            result = urllib.urlretrieve(self.image_url)
+        obj = super(AlbumForm, self).save(commit=False)
+        if obj.image_url:
+            result = urllib.urlretrieve(obj.image_url)
             obj.image.save(
-                os.path.basename(self.image_url), File(open(result[0])))
+                os.path.basename(obj.image_url), File(open(result[0])))
         if commit:
             obj.save()
 
