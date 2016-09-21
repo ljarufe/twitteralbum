@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_extensions',
     # local
     'collector',
+    'albums',
 ]
 
 MIDDLEWARE = [
@@ -114,8 +115,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_L10N = True
-
-USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
