@@ -15,6 +15,7 @@ class Command(BaseCommand):
         super(Command, self).__init__(*args, **kwargs)
         self.albums = Album.objects.all()
         self.counter = self.albums.count()
+        self.twitter = TwitterConnector.objects.first()
 
     def _save(self, **kwargs):
         album_form = AlbumForm(data=kwargs)
@@ -41,14 +42,14 @@ class Command(BaseCommand):
             conditions.append("since:{date}".format(
                 date=last_creation_date.strftime("%Y-%m-%d")))
         else:
-            conditions.append("since:2015-01-01")
+            conditions.append("until:2016-08-01")
 
         return conditions
 
     def handle(self, *args, **options):
-        twitter = TwitterConnector.objects.all().first()
+        results = self.twitter.get_results(*self.get_conditions())
         try:
-            for result in twitter.get_results(self.get_conditions()):
+            for result in results:
                 if 'media' in result['entities']:
                     for media in result['entities']['media']:
                         self._save(
@@ -57,4 +58,4 @@ class Command(BaseCommand):
                             twitter_creation_date=result['created_at'],
                             favorite_count=result['favorite_count'])
         except TwythonRateLimitError:
-            pass
+            print "max"

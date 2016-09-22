@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load thumbnail static %}
+
+{% block body %}
+  {% for album in albums %}
+    <div class="col-xs-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          User: { album.user }}
+        </div>
+        <div class="panel-body">
+          <img src="{{ album.image|thumbnail_url:'avatar' }}">
+        </div>
+        <div class="panel-footer">
+          Creation date: {{ album.creation_date }}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}

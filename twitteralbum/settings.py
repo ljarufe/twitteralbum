@@ -23,6 +23,15 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -33,7 +42,6 @@ SECRET_KEY = '_%h4j()b@p$4zkik8%+&u#*g43kj46lv&35vdlc9(*_7hiwnwq'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -46,6 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third
     'django_extensions',
+    'easy_thumbnails',
+    'rest_framework',
     # local
     'collector',
     'albums',
@@ -74,6 +84,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
             ],
         },
     },
@@ -125,15 +138,23 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-STATIC_URL = '/static/'
-
 # twython
-APP_KEY = 'riwoLZOxkVe5iQoBupAIQBqtn'
+APP_KEY = 'V20I1XsbhoTF5YLAopm4ks1pj'
 
-APP_SECRET = 'z0x7SfFgMPO68A8izX88bK6IUdprKb4DucA22xkwkdmDsJk6i7'
+APP_SECRET = 'EpTqdMOzSn6dA0dgmvK6WEvy3JjMNe1ntSzIUpPKHahs5puX1G'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# thumbnails
+THUMBNAIL_ALIASES = {
+    '': {
+        'avatar': {'size': (225, 225), 'crop': True},
+    },
+}
+
+# REST framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}

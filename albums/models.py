@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from datetime import datetime
+from django.utils import timezone
 
 from django.db import models
 
@@ -11,7 +11,7 @@ class Album(models.Model):
         u'image', upload_to='albums')
     image_url = models.URLField(u'image URL', unique=True)
     twitter_creation_date = models.DateTimeField(u'twitter creation date')
-    creation_date = models.DateTimeField(u'creation date', default=datetime.now)
+    creation_date = models.DateTimeField(u'creation date', default=timezone.now)
     favorite_count = models.IntegerField(u'favorite count', default=0)
 
     def __unicode__(self):
